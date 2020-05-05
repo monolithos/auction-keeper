@@ -128,18 +128,9 @@ class AuctionKeeper:
         self.add_arguments(parser=parser)
         self.arguments = parser.parse_args(args)
 
-        def get_params(params_name):
-            return kwargs[params_name] if params_name in kwargs else self.arguments.__getattribute__(params_name)
-
         # Configure connection to the chain
         provider = HTTPProvider(endpoint_uri=self.arguments.rpc_host,
                                 request_kwargs={'timeout': self.arguments.rpc_timeout})
-
-        if "infura" in self.arguments.rpc_host:
-            self.use_infura = True
-            "wss://kovan.infura.io/v3/683836c8b9384898a9f99d483ae389bc"
-            wss_url = f"wss://{'/ws/'.join(self.arguments.rpc_host.split('://')[1].split('/', 1))}"
-            self.web3_wss = kwargs['web3_wss'] if 'web3_wss' in kwargs else Web3(WebsocketProvider(wss_url))
 
         self.web3: Web3 = kwargs['web3'] if 'web3' in kwargs else Web3(provider)
         self.web3.eth.defaultAccount = self.arguments.eth_from
@@ -249,7 +240,7 @@ class AuctionKeeper:
             except (RequestException, ConnectionError, ValueError, AttributeError):
                 logging.exception("Error checking auction states")
 
-        with Lifecycle(self.web3, web3_ws=self.web3_wss) as lifecycle:
+        with Lifecycle(self.web3) as lifecycle:
             self.lifecycle = lifecycle
             lifecycle.on_startup(self.startup)
             lifecycle.on_shutdown(self.shutdown)
