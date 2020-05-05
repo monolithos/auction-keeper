@@ -12,8 +12,8 @@ setup(
     author_email='',
     description='',
     install_requires=[
-        "git+https://install-utils-user:mYmm%x|8KorJbyS3dxf@github.com/captain13128/pymaker.git",
-        "git+https://install-utils-user:mYmm%x|8KorJbyS3dxf@github.com/captain13128/pygasprice-client.git",
+        # "-e git+https://install-utils-user:mYmm%x|8KorJbyS3dxf@github.com/captain13128/pymaker.git#egg=pymaker",
+        # "-e git+https://install-utils-user:mYmm%x|8KorJbyS3dxf@github.com/captain13128/pygasprice-client.git#egg=pygasprice-client",
         "forex_python",
         "ccxt",
     ]
