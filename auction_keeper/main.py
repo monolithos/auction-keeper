@@ -25,7 +25,7 @@ import threading
 
 from datetime import datetime
 from requests.exceptions import RequestException
-from web3 import Web3, HTTPProvider
+from web3 import Web3, HTTPProvider, WebsocketProvider
 
 from pymaker import Address
 from pymaker.deployment import DssDeployment
@@ -44,9 +44,7 @@ from auction_keeper.urn_history import UrnHistory
 class AuctionKeeper:
     logger = logging.getLogger()
 
-    def __init__(self, args: list, **kwargs):
-        parser = argparse.ArgumentParser(prog='auction-keeper')
-
+    def add_arguments(self, parser):
         parser.add_argument("--rpc-host", type=str, default="http://localhost:8545",
                             help="JSON-RPC endpoint URI with port (default: `http://localhost:8545')")
         parser.add_argument("--rpc-timeout", type=int, default=10,
@@ -103,6 +101,9 @@ class AuctionKeeper:
         parser.add_argument("--model", type=str, required=True, nargs='+',
                             help="Commandline to use in order to start the bidding model")
 
+        parser.add_argument('--addresses-path', type=str, default=None,
+                            help="Path to json file with contract addresses")
+
         gas_group = parser.add_mutually_exclusive_group()
         gas_group.add_argument("--ethgasstation-api-key", type=str, default=None, help="ethgasstation API key")
         gas_group.add_argument('--etherchain-gas-price', dest='etherchain_gas', action='store_true',
@@ -122,11 +123,24 @@ class AuctionKeeper:
         parser.add_argument("--debug", dest='debug', action='store_true',
                             help="Enable debug output")
 
+    def __init__(self, args: list, **kwargs):
+        parser = argparse.ArgumentParser()
+        self.add_arguments(parser=parser)
         self.arguments = parser.parse_args(args)
+
+        def get_params(params_name):
+            return kwargs[params_name] if params_name in kwargs else self.arguments.__getattribute__(params_name)
 
         # Configure connection to the chain
         provider = HTTPProvider(endpoint_uri=self.arguments.rpc_host,
                                 request_kwargs={'timeout': self.arguments.rpc_timeout})
+
+        if "infura" in self.arguments.rpc_host:
+            self.use_infura = True
+            "wss://kovan.infura.io/v3/683836c8b9384898a9f99d483ae389bc"
+            wss_url = f"wss://{'/ws/'.join(self.arguments.rpc_host.split('://')[1].split('/', 1))}"
+            self.web3_wss = kwargs['web3_wss'] if 'web3_wss' in kwargs else Web3(WebsocketProvider(wss_url))
+
         self.web3: Web3 = kwargs['web3'] if 'web3' in kwargs else Web3(provider)
         self.web3.eth.defaultAccount = self.arguments.eth_from
         register_keys(self.web3, self.arguments.eth_key)
@@ -143,8 +157,13 @@ class AuctionKeeper:
                 and self.arguments.from_block is None:
             raise RuntimeError("--from-block must be specified to kick off flop auctions")
 
+        self.addresses_path = kwargs["addresses_path"] if "addresses-path" in kwargs else self.arguments.addresses_path
+
         # Configure core and token contracts
-        self.mcd = DssDeployment.from_node(web3=self.web3)
+        if self.addresses_path is not None:
+            self.mcd = DssDeployment.from_json(web3=self.web3, conf=open(self.addresses_path, "r").read())
+        else:
+            self.mcd = DssDeployment.from_node(web3=self.web3)
         self.vat = self.mcd.vat
         self.cat = self.mcd.cat
         self.vow = self.mcd.vow
@@ -213,7 +232,6 @@ class AuctionKeeper:
         logging.getLogger("asyncio").setLevel(logging.INFO)
         logging.getLogger("requests").setLevel(logging.INFO)
 
-
     def main(self):
         def seq_func(check_func: callable):
             assert callable(check_func)
@@ -231,7 +249,7 @@ class AuctionKeeper:
             except (RequestException, ConnectionError, ValueError, AttributeError):
                 logging.exception("Error checking auction states")
 
-        with Lifecycle(self.web3) as lifecycle:
+        with Lifecycle(self.web3, web3_ws=self.web3_wss) as lifecycle:
             self.lifecycle = lifecycle
             lifecycle.on_startup(self.startup)
             lifecycle.on_shutdown(self.shutdown)
