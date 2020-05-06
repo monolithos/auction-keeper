@@ -10,6 +10,6 @@ exec python3 -u -m auction_keeper.main $@ \
     --ilk "ETH-A" \
     --type flip \
     --max-auctions 100 \
-    --model bin/auction-keeper --model '/home/captain/development/makerdao_python/auction-keeper/bin/eth-a.sh' \
+    --model '/home/captain/development/makerdao_python/auction-keeper/bin/eth-a.sh' \
     --from-block 17707858 \
     --debug

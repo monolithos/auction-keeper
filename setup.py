@@ -5,6 +5,7 @@ setup(
     version='1.0.0',
     packages=[
         'auction_keeper',
+        'models'
     ],
     url='https://github.com/captain13128/auction-keeper',
     license='',
