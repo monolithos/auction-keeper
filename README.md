@@ -162,6 +162,7 @@ In order to clone the project and install required third-party packages please e
 ```
 git clone https://github.com/makerdao/auction-keeper.git
 cd auction-keeper
+export PIP_EXTRA_INDEX_URL=http://address/simple/
 git submodule update --init --recursive
 pip3 install -r requirements.txt
 ```
