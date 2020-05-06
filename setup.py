@@ -12,8 +12,8 @@ setup(
     author_email='',
     description='',
     install_requires=[
-        "pymaker==1.1.0",
-        "pygasprice-client==1.0.0",
+        "pymaker==1.1.*",
+        "pygasprice-client==1.0.*",
         "forex_python",
         "ccxt",
     ]
