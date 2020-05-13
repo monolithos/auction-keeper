@@ -45,56 +45,74 @@ class AuctionKeeper:
     logger = logging.getLogger()
 
     def add_arguments(self, parser):
+
+        # RPC-SETTINGS
         parser.add_argument("--rpc-host", type=str, default="http://localhost:8545",
                             help="JSON-RPC endpoint URI with port (default: `http://localhost:8545)")
+
         parser.add_argument("--rpc-timeout", type=int, default=10,
                             help="JSON-RPC timeout (in seconds, default: 10)")
 
+        # TX-SENDER SETTINGS
         parser.add_argument("--eth-from", type=str, required=True,
                             help="Ethereum account from which to send transactions")
+
         parser.add_argument("--eth-key", type=str, nargs='*',
                             help="Ethereum private key(s) to use (e.g. 'key_file=aaa.json,pass_file=aaa.pass')")
 
+        # AUCTION SETTINGS
         parser.add_argument('--type', type=str, choices=['flip', 'flap', 'flop'],
                             help="Auction type in which to participate")
+
         parser.add_argument('--ilk', type=str,
                             help="Name of the collateral type for a flip keeper (e.g. 'ETH-B', 'ZRX-A'); "
                                  "available collateral types can be found at the left side of the CDP Portal")
 
         parser.add_argument('--bid-only', dest='create_auctions', action='store_false',
                             help="Do not take opportunities to create new auctions")
+
         parser.add_argument('--kick-only', dest='bid_on_auctions', action='store_false',
                             help="Do not bid on auctions")
+
         parser.add_argument('--deal-for', type=str, nargs="+",
                             help="List of addresses for which auctions will be dealt")
 
         parser.add_argument('--min-auction', type=int, default=1,
                             help="Lowest auction id to consider")
+
         parser.add_argument('--max-auctions', type=int, default=1000,
                             help="Maximum number of auctions to simultaneously interact with, "
                                  "used to manage OS and hardware limitations")
+
         parser.add_argument('--min-flip-lot', type=float, default=0,
                             help="Minimum lot size to create or bid upon a flip auction")
+
         parser.add_argument('--bid-check-interval', type=float, default=2.0,
                             help="Period of timer [in seconds] used to check bidding models for changes")
+
         parser.add_argument('--bid-delay', type=float, default=0.0,
                             help="Seconds to wait between bids, used to manage OS and hardware limitations")
+
         parser.add_argument('--shard-id', type=int, default=0,
                             help="When sharding auctions across multiple keepers, this identifies the shard")
+
         parser.add_argument('--shards', type=int, default=1,
                             help="Number of shards; should be one greater than your highest --shard-id")
 
         parser.add_argument("--vulcanize-endpoint", type=str,
                             help="When specified, frob history will be queried from a VulcanizeDB lite node, "
                                  "reducing load on the Ethereum node for flip auctions")
+
         parser.add_argument('--from-block', type=int,
                             help="Starting block from which to find vaults to bite or debt to queue "
                                  "(set to block where MCD was deployed)")
 
         parser.add_argument('--vat-dai-target', type=float,
                             help="Amount of Dai to keep in the Vat contract (e.g. 2000)")
+
         parser.add_argument('--keep-dai-in-vat-on-exit', dest='exit_dai_on_shutdown', action='store_false',
                             help="Retain Dai in the Vat on exit, saving gas when restarting the keeper")
+
         parser.add_argument('--keep-gem-in-vat-on-exit', dest='exit_gem_on_shutdown', action='store_false',
                             help="Retain collateral in the Vat on exit")
 
@@ -105,18 +123,26 @@ class AuctionKeeper:
                             help="Path to json file with contract addresses")
 
         gas_group = parser.add_mutually_exclusive_group()
+
         gas_group.add_argument("--ethgasstation-api-key", type=str, default=None, help="ethgasstation API key")
+
         gas_group.add_argument('--etherchain-gas-price', dest='etherchain_gas', action='store_true',
                                help="Use etherchain.org gas price")
+
         gas_group.add_argument('--poanetwork-gas-price', dest='poanetwork_gas', action='store_true',
                                help="Use POANetwork gas price")
+
         gas_group.add_argument('--fixed-gas-price', type=float, default=None,
                                help="Uses a fixed value (in Gwei) instead of an external API to determine initial gas")
+
         parser.add_argument("--poanetwork-url", type=str, default=None, help="Alternative POANetwork URL")
+
         parser.add_argument("--gas-initial-multiplier", type=float, default=1.0,
                             help="Adjusts the initial API-provided 'fast' gas price, default 1.0")
+
         parser.add_argument("--gas-reactive-multiplier", type=float, default=2.25,
                             help="Increases gas price when transactions haven't been mined after some time")
+
         parser.add_argument("--gas-maximum", type=float, default=5000,
                             help="Places an upper bound (in Gwei) on the amount of gas to use for a single TX")
 

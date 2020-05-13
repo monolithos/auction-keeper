@@ -5,7 +5,6 @@ setup(
     version='1.0.0',
     packages=[
         'auction_keeper',
-        'models'
     ],
     url='https://github.com/captain13128/auction-keeper',
     license='',
@@ -15,7 +14,5 @@ setup(
     install_requires=[
         "pymaker==1.1.*",
         "pygasprice-client==1.0.*",
-        "forex_python",
-        "ccxt",
     ]
 )
