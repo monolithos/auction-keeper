@@ -48,7 +48,7 @@ if __name__ == '__main__':
     keeper_args = [
         '--rpc-host', RPC_HOST,
         '--eth-from', ETH_FROM,
-        '--eth-key', f'key_file={ETH_KEY_FILE}aaaaaaaaaaaa,pass_file={ETH_PASS_FILE}',
+        '--eth-key', f'key_file={ETH_KEY_FILE},pass_file={ETH_PASS_FILE}',
         '--addresses-path', ADDRESSES_FILE,
         '--ilk', 'ETH-A',
         '--type', AUCTION_TYPE,
