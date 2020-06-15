@@ -3,14 +3,26 @@ import os
 
 from auction_keeper.main import AuctionKeeper
 
+
 BASE_PATH = os.path.dirname(__file__)
+# NETWORK = "kovan"
+NETWORK = "mainnet"
 
 # ETHEREUM_SETTINGS
-RPC_HOST = 'https://kovan.infura.io/v3/683836c8b9384898a9f99d483ae389bc'
-ETH_FROM = '0xC0CCab7430aEc0C30E76e1dA596263C3bdD82932'
-ETH_KEY_FILE = "/home/captain/development/dss-deploy-scripts/keystore.json"
-ETH_PASS_FILE = "/home/captain/development/dss-deploy-scripts/p.pass"
-ADDRESSES_FILE = os.path.join(BASE_PATH, 'addresses', 'kovan-addresses.json')
+if NETWORK.upper() == "KOVAN":
+    RPC_HOST = 'https://kovan.infura.io/v3/****************'
+    ETH_FROM = '0x00000000000000000000000000000'
+    ETH_KEY_FILE = "/PATH/TO/KEY/FILE.json"
+    ETH_PASS_FILE = "/PATH/TO/PASS/FILE.pass"
+    ADDRESSES_FILE = os.path.join(BASE_PATH, 'addresses', 'kovan-addresses.json')  # or '/PATH/TO/ADDRESS/FILE.json'
+elif NETWORK.upper() == "MAINNET":
+    RPC_HOST = 'https://mainnet.infura.io/v3/**************'
+    ETH_FROM = '0x00000000000000000000000000000'
+    ETH_KEY_FILE = "/PATH/TO/KEY/FILE.json"
+    ETH_PASS_FILE = "/PATH/TO/PASS/FILE.pass"
+    ADDRESSES_FILE = os.path.join(BASE_PATH, 'addresses', 'mainnet-addresses.json')  # or '/PATH/TO/ADDRESS/FILE.json'
+else:
+    raise Exception('NOT SUPPORTED NETWORK')
 
 # MODEL SETTINGS
 MODEL_RUN_DIR = 'bin'
