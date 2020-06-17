@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 set -e
 
 rm -rf venv
-python3 -m venv venv
+python3.6 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 

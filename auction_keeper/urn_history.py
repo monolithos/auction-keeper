@@ -56,7 +56,7 @@ class UrnHistory:
         start = datetime.now()
         urn_addresses = set()
         past_blocks = self.web3.eth.blockNumber - self.from_block
-        frobs = self.mcd.vat.past_frobs(past_blocks, self.ilk)
+        frobs = self.mcd.vat.past_frobs(from_block=past_blocks, ilk=self.ilk)
         for frob in frobs:
             urn_addresses.add(frob.urn)
 

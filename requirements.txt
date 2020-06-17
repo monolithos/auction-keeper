@@ -1,6 +1,7 @@
-# pymaker==1.1.*
+# pymaker
 # pygasprice-client==1.0.*
 
+# -e git+https://github.com/captain13128/pymaker.git#egg=pymaker
 -e git+https://github.com/monolithos/pymaker.git#egg=pymaker
 -e git+https://github.com/captain13128/pygasprice-client.git#egg=pygasprice_client
 # -e git+https://github.com/monolithos/pygasprice-client.git#egg=pygasprice_client
