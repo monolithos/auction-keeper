@@ -41,10 +41,9 @@ if __name__ == '__main__':
         try:
             signal = json.loads(line)
             if model_type.upper() == ModelType.flip.value:
-                price = model.calculate_price_for_auction(signal, pair=pair)
-            else:
                 price = model.calculate_price_for_flip_auction(signal, pair=pair)
-
+            else:
+                price = model.calculate_price_for_auction(signal, pair=pair)
             if price:
                 stance = {'price': price / 10 ** 18}
                 print(json.dumps(stance), flush=True)
