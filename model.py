@@ -31,10 +31,13 @@ if __name__ == '__main__':
                              finish_percent=finish_percent, markup_percent=markup_percent)
 
     for line in sys.stdin:
-        signal = json.loads(line)
+        try:
+            signal = json.loads(line)
 
-        price = model.calculate_price_for_auction(signal, pair=pair)
+            price = model.calculate_price_for_auction(signal, pair=pair)
 
-        if price:
-            stance = {'price': price / 10 ** 18}
-            print(json.dumps(stance), flush=True)
+            if price:
+                stance = {'price': price / 10 ** 18}
+                print(json.dumps(stance), flush=True)
+        except:
+            pass
