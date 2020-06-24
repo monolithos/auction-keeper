@@ -20,10 +20,13 @@ while [ "$1" != "" ]; do
         -a | --our-address )      shift
                                   our_addresses+=( "$1" )
                                   ;;
-        -rd | --root-dir )      shift
+        -rd | --root-dir )        shift
                                   dir=$1
                                   ;;
-        * )                     shift
+        -mt | --modal-type )      shift
+                                  export MODEL_TYPE=$1
+                                  ;;
+        * )                       shift
                                   ;;
     esac
     shift

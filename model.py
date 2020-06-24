@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import enum
 
 from decimal import Decimal
 
@@ -16,12 +17,18 @@ OUR_ADDRESSES = [
 ]
 
 
+class ModelType(enum.Enum):
+    base = "BASE"
+    flip = "FLIP"
+
+
 if __name__ == '__main__':
     our_addresses = os.environ.get("OUR_ADDRESSES", OUR_ADDRESSES)
     if isinstance(our_addresses, str):
         our_addresses = our_addresses.split()
 
     pair = os.environ.get("PAIR", PAIR)
+    model_type = os.environ.get("MODEL_TYPE", ModelType.base.value)
 
     start_percent = Decimal(os.environ.get("START_PERCENT", START_PERCENT))
     finish_percent = Decimal(os.environ.get("FINISH_PERCENT", FINISH_PERCENT))
@@ -33,8 +40,10 @@ if __name__ == '__main__':
     for line in sys.stdin:
         try:
             signal = json.loads(line)
-
-            price = model.calculate_price_for_auction(signal, pair=pair)
+            if model_type.upper() == ModelType.flip.value:
+                price = model.calculate_price_for_auction(signal, pair=pair)
+            else:
+                price = model.calculate_price_for_flip_auction(signal, pair=pair)
 
             if price:
                 stance = {'price': price / 10 ** 18}
