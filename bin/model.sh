@@ -23,8 +23,8 @@ while [ "$1" != "" ]; do
         -rd | --root-dir )      shift
                                   dir=$1
                                   ;;
-        * )                       usage
-                                  exit 1
+        * )                     shift
+                                  ;;
     esac
     shift
 done
