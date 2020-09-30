@@ -21,6 +21,8 @@ In `auction-keeper` directory:
  - run `docker pull monolithos/auction-keeper_keeper`
 
 ## RUN keeper:
+##### get help:
+- run `docker run --name "CONTAINER_NAME" --rm monolithos/auction-keeper_keeper --help`
 - run 
 ```
     docker run --name "CONTAINER_NAME" --rm monolithos/auction-keeper_keeper \

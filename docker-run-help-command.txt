@@ -1,0 +1,124 @@
+message:    The container launches Auction keeper to participate in MonolithosDAO auctions.
+            To start an auction, you must set the input parameters.
+            You can see a list of all parameters by running the command:
+            docker run auction_keeper --help command
+
+required params:
+    -msp | --model-start-percent        Starting percentage for the auction model.
+                                        Keeper will check the current bid > "model-start-percent".
+                                        If Yes, a bid will be placed, otherwise the auction will be skipped.
+                                        EXAMPLE: -30 (for FLIP or FLOP auction); 25 (for FLAP auction)
+
+    -mfp | --model-finish-percent       The final percentage for the auction model.
+                                        Keeper will check the current bid < "model-finish-percent".
+                                        If Yes, a bid will be placed, otherwise the auction will be skipped.
+                                        EXAMPLE: -10 (for FLIP or FLOP auction); 5 (for FLAP auction)
+
+    -mmp | --model-markup_percent       Each new bid will differ from the previous one by "model-markup_percent" percent.
+                                        It cannot be less than the value set by MDT token holders.
+                                        Check this value before starting.
+                                        EXAMPLE: 5 (for FLIP or FLOP); -5 (for FLAP auction)
+
+    -mp  | --model-pair                 Symbol of the pair that will be used to get the price from Setzer in the auction model
+                                        EXAMPLE: ETHRUB (for FLIP); MDTMCR (for FLAP or FLOP auction)
+
+    -moa | --model-our-address          A list of addresses whose bids will not be interrupted.
+                                        We recommend set the address that will participate in the "eth-from" vote
+                                        THE LIST OF ADDRESSES IS PASSED AS FOLLOWS: -moa 0x000000000000000000001 --model-our-address 0x000000000000000000002
+                                        EXAPLE: 0x000000000000000000001
+
+    -t   | --auction-type               Type of auction to launch.
+                                        Acceptable options: flip, flap, flop
+                                        EXAMPLE: flip
+
+    -rpc | --rpc-host                   Url of the rpc, ethereum node, which will be used to interact with the blockchain
+                                        EXAPLE: http://192.168.0.5:8545
+
+    -pk  | --address-private-key        Private key ethereum account that will be used to participate in the auction
+                                        EXAMPLE: 0x0000000000000000000000000000000000000000001
+
+    -a   | --eth-from                   Address ethereum account that will be used to participate in the auction
+                                        EXAMPLE:0x0000000000000000000000001
+
+optional params:
+    -mt  | --model-type                 Type of auction model.
+                                        FLIP:   used only for FLIP auctions. With this model,
+                                                keeper will move to the second stage of the "dent" auction as soon as possible
+                                        BASE:   can be used for all types of auctions.
+                                                Keeper does not attempt to move to the second stage of the FLIP auction as soon as possible
+                                        POSSIBLE OPTIONS: FLIP, BASE
+                                        DEFAULT: FLIP for flip auction type; BASE for flap or flop auction type
+                                        EXAMPLE: BASE
+
+    -i   | --ilk                        ILK type. You must specify for the flip auction
+                                        EXAMPLE: ETH-A
+
+    --network                           Name of the ethereum network where the auction is being held
+                                        POSSIBLE OPTIONS: mainnet, kovan
+                                        DEFAULT: mainnet
+                                        EXAMPLE: kovan
+
+    --rpc-timeout                       JSON-RPC timeout (in seconds)
+                                        DEFAULT: 10
+                                        EXAMPLE: 20
+
+    --deal-for                          List of addresses for which the deal functions will be called in auctions
+                                        To call for all participants, add `ALL`. To add `NONE` for anyone
+                                        THE LIST OF ADDRESSES IS PASSED AS FOLLOWS: --deal-for 0x000000000000000000001 --deal-for 0x000000000000000000002
+                                        EXAMPLE: --deal-for ALL
+
+    --bid-only                          Do not take opportunities to create new auctions (ON/OFF).
+                                        EXAMPLE: --bid-only
+
+    --kick-only                         Do not bid on auctions (ON/OFF)
+                                        EXAMPLE: --kick-only
+
+    --min-auction                       Lowest auction id to consider
+                                        DEFAULT: 1
+                                        EXAMPLE: 100
+
+    --max-auctions                      Maximum number of auctions to simultaneously interact with, used to manage OS and limitations
+                                        DEFAULT: 1000
+                                        EXAMPLE: 2000
+
+    --min-flip-lot                      Minimum lot size to create or bid upon a flip auction
+                                        DEFAULT: 0
+                                        EXAMPLE: 100.55
+
+    --bid-check-interval                Period of timer [in seconds] used to check bidding models for changes
+                                        DEFAULT: 2.0
+                                        EXAMPLE: 5.5
+
+    --bid-delay                         Seconds to wait between bids, used to manage OS and hardware limitations
+                                        DEFAULT: 0.0
+                                        EXAMPLE: 1.1
+
+    --from-block                        Starting block from which to find vaults to bite or debt to queue (set to block where MCD was deployed 10310344 )
+                                        DEFAULT: 10310344
+                                        EXAMPLE: 10500000
+
+    --vat-mcr-target                    Amount of MCR to keep in the Vat contract
+                                        DEFAULT: 0
+                                        EXAMPLE: 50000
+
+    --keep-mcr                          Retain MCR in the Vat on exit, saving gas when restarting the keeper (ON/OFF)
+                                        EXAMPLE: --keep-mcr
+
+    --keep-gem                          Retain collateral in the Vat on exit
+                                        EXAMPLE: --keep-gem
+
+    --ethgasstation-api-key             ethgasstation (https://data.defipulse.com/dashboard/egs) API key
+                                        EXAMPLE: 24000000000099c65e0000000000fe338fa0000000000940f20000000000
+
+    --fixed-gas-price                   Uses a fixed value (in Gwei) instead of an external API to determine initial gas
+                                        Places an upper bound (in Gwei) on the amount of gas to use for a single TX
+
+    --gas-maximum                       Places an upper bound (in Gwei) on the amount of gas to use for a single TX
+                                        EXAMPLE: 111.11
+
+    --setzer-pairs                      Print available setzer pairs
+
+    -h | --help                         Print help
+
+Docker image created by the Monolithos team
+github: https://github.com/monolithos/auction-keeper

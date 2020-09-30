@@ -5,6 +5,11 @@ deal_for=()
 
 while [ "$1" != "" ]; do
     case $1 in
+        -h   | --help )                  shift
+                                  cat docker-run-help-command.txt
+                                  echo
+                                  exit 1
+                                  ;;
         -msp | --model-start-percent )   shift
                                   export MODEL_START_PERCENT=$1
                                   ;;
@@ -14,28 +19,28 @@ while [ "$1" != "" ]; do
         -mmp | --model-markup_percent )  shift
                                   export MODEL_MARKUP_PERCENT=$1
                                   ;;
-        -mp | --model-pair )             shift
+        -mp  | --model-pair )            shift
                                   export MODEL_PAIR=$1
                                   ;;
         -moa | --model-our-address )     shift
                                          our_addresses+=( "$1" )
                                   ;;
-        --model-modal-type )             shift
+        -mt  | --model-type )             shift
                                   export MODEL_TYPE=$1
                                   ;;
-        -t | --auction-type )            shift
+        -t   | --auction-type )          shift
                                   export AUCTION_TYPE=$1
                                   ;;
-        -h | --rpc-host )                shift
+        -rpc | --rpc-host )                shift
                                   export RPC_HOST=$1
                                   ;;
-        -pk | --address-private-key )    shift
+        -pk  | --address-private-key )   shift
                                   export ETH_PRIVATE_KEY=$1
                                   ;;
-        -a | --eth-from )    shift
+        -a   | --eth-from )              shift
                                   export ETH_FROM=$1
                                   ;;
-        -i | --ilk )                     shift
+        -i   | --ilk )                   shift
                                   export ILK=$1
                                   ;;
         --network )                      shift
@@ -56,7 +61,7 @@ while [ "$1" != "" ]; do
         --min-auction )                  shift
                                   export MIN_AUCTION=$1
                                   ;;
-        --max-auction )                  shift
+        --max-auctions )                  shift
                                   export MAX_AUCTION=$1
                                   ;;
         --min-flip-lot )                 shift
@@ -80,7 +85,7 @@ while [ "$1" != "" ]; do
         --keep-gem )                     shift
                                   export KEEP_GEM_IN_VAT_ON_EXIT=true
                                   ;;
-        --gasstation-api-key )           shift
+        --ethgasstation-api-key )           shift
                                   export ETHGASSTATION_API_KEY=$1
                                   ;;
         --fixed-gas-price )              shift
@@ -89,7 +94,15 @@ while [ "$1" != "" ]; do
         --gas-maximum )                  shift
                                   export GAS_MAXIMUM=$1
                                   ;;
+        --setzer-pairs )                 shift
+                                  setzer pairs
+                                  echo
+                                  exit 1
+                                  ;;
         * )                       shift
+                                  cat docker-run-help-command.txt
+                                  echo
+                                  exit 1
                                   ;;
     esac
                                   shift
@@ -97,5 +110,20 @@ done
 
 export  MODEL_OUR_ADDRESSES="${our_addresses[*]}"
 export  DEAL_FOR="${deal_for[*]}"
+
+if [[ -z $MODEL_START_PERCENT || \
+      -z $MODEL_FINISH_PERCENT || \
+      -z $MODEL_MARKUP_PERCENT || \
+      -z $MODEL_PAIR || \
+      -z $MODEL_OUR_ADDRESSES || \
+      -z $AUCTION_TYPE || \
+      -z $RPC_HOST || \
+      -z $ETH_PRIVATE_KEY || \
+      -z $ETH_FROM ]] ;
+then
+    cat docker-run-required-params.txt
+    echo
+    exit 1
+fi
 
 python keeper.py

@@ -85,13 +85,17 @@ if __name__ == '__main__':
         file.write(password)
 
     ETH_KEY = f'key_file={key_file},pass_file={pass_file}'
+    MODEL_TYPE = EnvParam(env_name="MODEL_TYPE", cast_type=str, required=False, default=None).value
+
+    if MODEL_TYPE is None:
+        MODEL_TYPE = 'BASE' if AUCTION_TYPE != 'flip' else 'FLIP'
 
     model_config_ = {
         "start-percent": EnvParam(env_name="MODEL_START_PERCENT", cast_type=str, required=True).value,
         "finish-percent": EnvParam(env_name="MODEL_FINISH_PERCENT", cast_type=str, required=True).value,
         "markup_percent": EnvParam(env_name="MODEL_MARKUP_PERCENT", cast_type=str, required=True).value,
         "pair": EnvParam(env_name="MODEL_PAIR", cast_type=str, required=True).value,
-        "model-type": EnvParam(env_name="MODEL_TYPE", cast_type=str, required=True).value,
+        "model-type": MODEL_TYPE,
         "our-address": EnvParam(env_name="MODEL_OUR_ADDRESSES", cast_type=list, required=False, default=[ETH_FROM]).value,
     }
 
@@ -119,7 +123,7 @@ if __name__ == '__main__':
         ('--bid-delay', EnvParam(env_name="BID_DELAY", cast_type=float, required=False).value),
 
         ('--rpc-timeout', EnvParam(env_name="RPC_TIMEOUT", cast_type=int, required=False).value),
-        ('--from-block', EnvParam(env_name="FROM_BLOCK", cast_type=int, required=False, default=1).value),
+        ('--from-block', EnvParam(env_name="FROM_BLOCK", cast_type=int, required=False, default=10310344).value),
 
         ('--vat-dai-target', EnvParam(env_name="VAT_MCR_TARGET", cast_type=float, required=False).value),
         ('--keep-dai-in-vat-on-exit', EnvParam(env_name="KEEP_MCR_IN_VAT_ON_EXIT", cast_type=bool, required=False, default=False).value),
