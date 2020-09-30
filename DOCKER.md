@@ -4,38 +4,37 @@
 - docker-compose: https://docs.docker.com/compose/install/
 - Git
 
-## Installation
+## Installation and build
+#### Installation:
 Clone project and install required third-party packages:
 ```
-git clone https://github.com/makerdao/auction-keeper.git
+git clone https://github.com/monolithos/auction-keeper.git
 cd auction-keeper
-git submodule update --init --recursive
 ```
 
-## Build and run:
+#### Build:
 In `auction-keeper` directory:
-- create `hush` directory and add keystore (`auction.json`) and password (`auction.pass`) files
-- create `model` directory containing model file (`model.sh`)
-- create `.env` file with following format:
-```
-RPC_HOST={RPC_NODE_IP_OR_HOST_HERE}
-RPC_PORT={RPC_NODE_PORT_HERE}
-ETH_FROM={ETH_ADDRESS_HERE}
-FLIPPER_ADDRESS={FLIPPER_ADDRESS_HERE}
-FLOPPER_ADDRESS={FLOPPER_ADDRESS_HERE}
-FLAPPER_ADDRESS={FLAPPER_ADDRESS_HERE}
-CAT_ADDRESS={CAT_ADDRESS}
-VOW_ADDRESS={VOW_ADDRESS}
-```
+
 - run `docker-compose build`
-- start individual auction_keepers as:
+
+## Get image from DockerHub
+ - run `docker pull monolithos/auction-keeper_keeper`
+
+## RUN keeper:
+- run 
 ```
-docker-compose up flipper_auction
-docker-compose up flopper_auction
-docker-compose up flapper_auction
-```
-or all keepers as
-```
-docker-compose up
+    docker run --name "CONTAINER_NAME" --rm monolithos/auction-keeper_keeper \
+           --model-start-percent 10 \
+           --model-finish-percent 50 \
+           --model-markup_percent 3 \
+           --model-pair ETHRUB  \
+           --model-our-address ADDRESS \
+           --model-modal-type FLIP \
+           -t flip \
+           -h http://localhos:8545 \
+           -i ETH-A \
+           --network kovan \
+           -a 0xC0CCab7430aEc0C30E76e1dA596263C3bdD82932 \
+       -pk 0x874FE5759060000DEM0000DEM00000000000000000E2E1E37CD525F2009A79F8 \
 ````
 

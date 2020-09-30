@@ -401,16 +401,16 @@ class AuctionKeeper:
         # Cat.bite implicitly kicks off the flip auction; no further action needed.
 
     def check_flap(self):
-        # Check if Vow has a surplus of Dai compared to bad debt
+        # Check if Vow has a surplus of MCR compared to bad debt
         joy = self.vat.dai(self.vow.address)
         awe = self.vat.sin(self.vow.address)
 
-        # Check if Vow has Dai in excess
+        # Check if Vow has MCR in excess
         if joy > awe:
             bump = self.vow.bump()
             hump = self.vow.hump()
 
-            # Check if Vow has enough Dai surplus to start an auction and that we have enough mkr balance
+            # Check if Vow has enough MCR surplus to start an auction and that we have enough mkr balance
             if (joy - awe) >= (bump + hump):
 
                 if self.arguments.bid_on_auctions and self.mkr.balance_of(self.our_address) == Wad(0):
@@ -456,12 +456,12 @@ class AuctionKeeper:
         sump = self.vow.sump()
         wait = self.vow.wait()
 
-        # Check if Vow has enough bad debt to start an auction and that we have enough dai balance
+        # Check if Vow has enough bad debt to start an auction and that we have enough mcr balance
         if woe + sin >= sump:
             # We need to bring Joy to 0 and Woe to at least sump
 
             if self.arguments.bid_on_auctions and self.vat.dai(self.our_address) == Rad(0):
-                self.logger.warning("Skipping opportunity to kiss/flog/heal/flop because there is no Dai to bid")
+                self.logger.warning("Skipping opportunity to kiss/flog/heal/flop because there is no MCR to bid")
                 return
 
             # first use kiss() as it settled bad debt already in auctions and doesn't decrease woe

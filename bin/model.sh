@@ -23,7 +23,7 @@ while [ "$1" != "" ]; do
         -rd | --root-dir )        shift
                                   dir=$1
                                   ;;
-        -mt | --modal-type )      shift
+        -mt | --model-type )      shift
                                   export MODEL_TYPE=$1
                                   ;;
         * )                       shift
