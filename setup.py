@@ -12,7 +12,7 @@ setup(
     author_email='',
     description='',
     install_requires=[
-        "pymaker==1.1.*",
+        "pymaker==1.*.*",
         "pygasprice-client==1.0.*",
     ]
 )
