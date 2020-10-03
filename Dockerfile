@@ -1,4 +1,4 @@
-FROM captain13128/setzer
+FROM monolithos/setzer
 
 WORKDIR /app
 COPY . .

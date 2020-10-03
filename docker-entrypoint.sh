@@ -100,9 +100,6 @@ while [ "$1" != "" ]; do
                                   exit 1
                                   ;;
         * )                       shift
-                                  cat docker-run-help-command.txt
-                                  echo
-                                  exit 1
                                   ;;
     esac
                                   shift

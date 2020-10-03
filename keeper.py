@@ -138,5 +138,4 @@ if __name__ == '__main__':
     keeper_args = generate_params_line(required_params) + generate_params_line(optional_params)
     if AUCTION_TYPE.upper() == 'FLIP':
         keeper_args += generate_params_line(flip_params)
-
     AuctionKeeper(keeper_args).main()
