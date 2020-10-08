@@ -39,6 +39,8 @@ from auction_keeper.logic import Auction, Auctions
 from auction_keeper.model import ModelFactory
 from auction_keeper.strategy import FlopperStrategy, FlapperStrategy, FlipperStrategy
 from auction_keeper.urn_history import UrnHistory
+from auction_keeper.util import setup_logging
+
 
 
 class AuctionKeeper:
@@ -150,6 +152,12 @@ class AuctionKeeper:
         parser.add_argument("--debug", dest='debug', action='store_true',
                             help="Enable debug output")
 
+        parser.add_argument("--telegram-log-config-file", type=str, required=False,
+                            help="config file for send logs to telegram chat (e.g. 'telegram_conf.json')", default=None)
+
+        parser.add_argument("--keeper-name", type=str, required=False,
+                            help="market maker keeper name (e.g. 'Uniswap_V2_MDTETH')", default="auction_keeper")
+
     def __init__(self, args: list, **kwargs):
         parser = argparse.ArgumentParser()
         self.add_arguments(parser=parser)
@@ -221,9 +229,8 @@ class AuctionKeeper:
         self.auctions_lock = threading.Lock()
         self.dead_since = {}
         self.lifecycle = None
-
-        logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s',
-                            level=(logging.DEBUG if self.arguments.debug else logging.INFO))
+        # logging.basicConfig(format='%(asctime)-15s %(levelname)-8s %(message)s',
+        #                     level=(logging.DEBUG if self.arguments.debug else logging.INFO))
 
         # Create gas strategy used for non-bids and bids which do not supply gas price
         self.gas_price = DynamicGasPrice(self.arguments)
@@ -245,6 +252,8 @@ class AuctionKeeper:
                 self.deal_for.add(Address(account))
 
         # reduce logspew
+        setup_logging(self.arguments)
+
         logging.getLogger('urllib3').setLevel(logging.INFO)
         logging.getLogger("web3").setLevel(logging.INFO)
         logging.getLogger("asyncio").setLevel(logging.INFO)

@@ -3,6 +3,25 @@ message:    The container launches Auction keeper to participate in MonolithosDA
             You can see a list of all parameters by running the command:
             docker run auction_keeper --help command
 
+
+For start keeper
+    run:
+        docker run --rm --name 'MyFlipAuctionist' monolithos/auction_keeper \
+            --model-start-percent -40 \
+            --model-finish-percent -10 \
+            --model-markup_percent 5 \
+            --model-pair ETHRUB \
+            --model-our-address 0x00KEEPER_ETH_ADDRESS001 \
+            --auction-type flip \
+            --rpc-host http://192.168.0.5:8545 \
+            --address-private-key 0x00KEEPER_ETH_PRIVATE_KEY000000000000000000001 \
+            --eth-from 0x00KEEPER_ETH_ADDRESS001
+
+For stop keeper
+    run:
+        docker exec MyFlipAuctionist kill -2 $(docker exec MyFlipAuctionist pgrep python)
+
+
 required params:
     -msp | --model-start-percent        Starting percentage for the auction model.
                                         Keeper will check the current bid > "model-start-percent".
@@ -14,7 +33,7 @@ required params:
                                         If Yes, a bid will be placed, otherwise the auction will be skipped.
                                         EXAMPLE: -10 (for FLIP or FLOP auction); 5 (for FLAP auction)
 
-    -mmp | --model-markup_percent       Each new bid will differ from the previous one by "model-markup_percent" percent.
+    -mmp | --model-markup-percent       Each new bid will differ from the previous one by "model-markup_percent" percent.
                                         It cannot be less than the value set by MDT token holders.
                                         Check this value before starting.
                                         EXAMPLE: 5 (for FLIP or FLOP); -5 (for FLAP auction)
@@ -115,6 +134,16 @@ optional params:
 
     --gas-maximum                       Places an upper bound (in Gwei) on the amount of gas to use for a single TX
                                         EXAMPLE: 111.11
+
+    --telegram-bot-token                A token from your telegrams of the bot that will send the logs with errors
+                                        EXAMPLE: 1000000006:AAGwDemoXDemopDemoNIS-F8bDemoXDemo8
+
+    --keeper-name                       Name of your keeper
+                                        EXAMPLE: my_favorite_Keeper
+
+    --telegram-chat-id                  A list of telegram chat id to which logs will be sent by your bot.
+                                        THE LIST OF ADDRESSES IS PASSED AS FOLLOWS: --telegram-chat-id 000000001 --telegram-chat-id -000000001
+                                        EXAPLE: --telegram-chat-id -000000001
 
     --setzer-pairs                      Print available setzer pairs
 

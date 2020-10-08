@@ -6,7 +6,7 @@ setup(
     packages=[
         'auction_keeper',
     ],
-    url='https://github.com/captain13128/auction-keeper',
+    url='https://github.com/monolithos/auction-keeper',
     license='',
     author='',
     author_email='',

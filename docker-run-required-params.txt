@@ -3,7 +3,7 @@ message:        Use `-h | --help` to get a complete list of parameters
 error: the following arguments are required:
     [-msp | --model-start-percent],
     [-mfp | --model-finish-percent],
-    [-mmp | --model-markup_percent],
+    [-mmp | --model-markup-percent],
     [-mp  | --model-pair],
     [-moa | --model-our-address],
 
