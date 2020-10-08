@@ -42,7 +42,6 @@ from auction_keeper.urn_history import UrnHistory
 from auction_keeper.util import setup_logging
 
 
-
 class AuctionKeeper:
     logger = logging.getLogger()
     dead_after = 10  # Assume block reorgs cannot resurrect an auction id after this many blocks
@@ -254,10 +253,10 @@ class AuctionKeeper:
         # reduce logspew
         setup_logging(self.arguments)
 
-        logging.getLogger('urllib3').setLevel(logging.INFO)
-        logging.getLogger("web3").setLevel(logging.INFO)
-        logging.getLogger("asyncio").setLevel(logging.INFO)
-        logging.getLogger("requests").setLevel(logging.INFO)
+        # logging.getLogger('urllib3').setLevel(logging.INFO)
+        # logging.getLogger("web3").setLevel(logging.INFO)
+        # logging.getLogger("asyncio").setLevel(logging.INFO)
+        # logging.getLogger("requests").setLevel(logging.INFO)
 
     def main(self):
         def seq_func(check_func: callable):
